@@ -3148,8 +3148,6 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         return actionBar;
     }
 
-    private CharSequence actionBarDefaultTitle;
-
     @Override
     public void setTitleOverlayText(String title, int titleId, Runnable action) {
         super.setTitleOverlayText(title, titleId, action);
@@ -3416,13 +3414,13 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (onlySelect) {
             actionBar.setBackButtonImage(R.drawable.ic_ab_back);
             if (initialDialogsType == DIALOGS_TYPE_BOT_SELECT_VERIFY) {
-                actionBar.setTitle(actionBarDefaultTitle = getString(R.string.BotChooseChatToVerify));
+                actionBar.setTitle(getString(R.string.BotChooseChatToVerify));
             } else if (isReplyTo) {
-                actionBar.setTitle(actionBarDefaultTitle = LocaleController.getString(R.string.ReplyToDialog));
+                actionBar.setTitle(LocaleController.getString(R.string.ReplyToDialog));
             } else if (isQuote) {
-                actionBar.setTitle(actionBarDefaultTitle = LocaleController.getString(R.string.QuoteTo));
+                actionBar.setTitle(getString(R.string.QuoteTo));
             } else if (initialDialogsType == DIALOGS_TYPE_FORWARD && selectAlertString == null) {
-                actionBar.setTitle(actionBarDefaultTitle = LocaleController.getString(R.string.ForwardTo));
+                actionBar.setTitle(getString(R.string.ForwardTo));
             } else if (initialDialogsType == DIALOGS_TYPE_WIDGET) {
                 actionBar.setTitle(getString(R.string.SelectChats));
             } else if (initialDialogsType == DIALOGS_TYPE_START_ATTACH_BOT) {
@@ -3464,7 +3462,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             } else {
                 statusDrawable = new AnimatedEmojiDrawable.SwapAnimatedEmojiDrawable(null, dp(26));
                 statusDrawable.center = true;
-                actionBar.setTitle(actionBarDefaultTitle = TypefaceHelper.getTitleText(), statusDrawable);
+                actionBar.setTitle(TypefaceHelper.getTitleText(), statusDrawable);
                 updateStatus(UserConfig.getInstance(currentAccount).getCurrentUser(), false);
             }
             if (folderId == 0) {
@@ -3786,32 +3784,6 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 @Override
                 public void onDeletePressed(int id) {
                     showDeleteAlert(getMessagesController().getDialogFilters().get(id));
-                }
-
-                private int lastTitleType = NekoConfig.tabsTitleType;
-                private int selectedTabId = -1;
-
-                @Override
-                public void onTabSelected(FilterTabsView.Tab tab, boolean forward, boolean animated) {
-                    if (actionBar == null) {
-                        return;
-                    }
-                    if (NekoConfig.tabsTitleType != NekoConfig.TITLE_TYPE_ICON) {
-                        if (lastTitleType == NekoConfig.TITLE_TYPE_ICON) {
-                            actionBar.setTitle(actionBarDefaultTitle);
-                            lastTitleType = NekoConfig.tabsTitleType;
-                        }
-                        return;
-                    }
-                    if (!selectedDialogs.isEmpty() || tab.id == selectedTabId) {
-                        return;
-                    }
-                    if (animated) {
-                        actionBar.setTitleAnimatedX(tab.isDefault ? actionBarDefaultTitle : tab.realTitle, tab.isDefault ? statusDrawable : null, forward, 200);
-                    } else {
-                        actionBar.setTitle(tab.isDefault ? actionBarDefaultTitle : tab.realTitle, tab.isDefault ? statusDrawable : null);
-                    }
-                    selectedTabId = tab.id;
                 }
             });
         }
@@ -6919,14 +6891,6 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                 }
 
                 filterTabsView.resetTabId();
-
-                if (actionBarDefaultTitle != null && !actionBarDefaultTitle.equals(actionBar.getTitle())) {
-                    if (animated) {
-                        actionBar.setTitleAnimatedX(actionBarDefaultTitle, statusDrawable, false, 200);
-                    } else {
-                        actionBar.setTitle(actionBarDefaultTitle, statusDrawable);
-                    }
-                }
             }
         }
         updateCounters(false);

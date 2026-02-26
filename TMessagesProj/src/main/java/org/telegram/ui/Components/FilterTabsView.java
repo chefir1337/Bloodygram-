@@ -117,8 +117,6 @@ public class FilterTabsView extends FrameLayout {
         void onPageReorder(int fromId, int toId);
 
         boolean canPerformActions();
-
-        default void onTabSelected(Tab tab, boolean forward, boolean animated) {};
     }
 
     public class Tab {
@@ -1295,7 +1293,6 @@ public class FilterTabsView extends FrameLayout {
 
         if (delegate != null) {
             delegate.onPageSelected(tab, scrollingForward);
-            delegate.onTabSelected(tab, scrollingForward, true);
         }
         scrollToChild(position);
     }
@@ -1417,7 +1414,6 @@ public class FilterTabsView extends FrameLayout {
     public void finishAddingTabs(boolean animated) {
         listView.setItemAnimator(animated ? itemAnimator : null);
         adapter.notifyDataSetChanged();
-        delegate.onTabSelected(tabs.get(currentPosition), false, false);
     }
 
     public void setColors(int line, int active, int unactive, int selector, int background) {
@@ -1746,13 +1742,6 @@ public class FilterTabsView extends FrameLayout {
         invalidate();
         scrollToChild(position);
 
-        if (manualScrollingToPosition != currentPosition) {
-            if (progress > 0.7f) {
-                delegate.onTabSelected(tabs.get(position), currentPosition < position, true);
-            } else if (progress < 0.3f) {
-                delegate.onTabSelected(tabs.get(currentPosition), currentPosition > position, true);
-            }
-        }
         if (progress >= 1.0f) {
             manualScrollingToPosition = -1;
             manualScrollingToId = -1;
