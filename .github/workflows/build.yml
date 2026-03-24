@@ -19,3 +19,4 @@ jobs:
         with:
           name: bloodygram-apk
           path: TMessagesProj_App/build/outputs/apk/debug/*.apk
+
